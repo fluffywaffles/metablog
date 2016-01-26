@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/skorlir/metablog#readme",
   "dependencies": {
-    "classy-js": "^1.0.8"
+    "classy-js": "^2.1.0"
   },
   "devDependencies": {
     "browser-sync": "^2.9.8",
