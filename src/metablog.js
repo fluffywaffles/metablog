@@ -1,5 +1,6 @@
 // [[METABLOG]]
-var Base = require('_baseclass')
+var Base = require('./_baseclass')
+  , util = require('./util')
 
 var mb = Object.create(null)
 var noop = function () { }
@@ -59,21 +60,15 @@ var Resource = mb.Resource = Base.define(function (res, options) {
   res.uri  = uri(options.uri)
 })
 
-function Renderer (renderer) {
-  return function Renderable (renderable) {
-    renderable.renderer = renderer.name
-    renderable.render   = renderer.create(renderable)
-  }
-}
-
 var Blog = mb.Blog = Base.define(function Blog (blog, options) {
   blog.options = util.extend2({}, options)
 
-  blog.Page = Page.use(Renderer(blog.options.pageRenderer || blog.options.renderer))
-  blog.Post = Post.use(Renderer(blog.options.postRenderer || blog.options.renderer))
-
   ;[ 'Page', 'Post', 'Resource', 'Collection' ].forEach(function (blogPart) {
-    blog[blogPart] = mb[blogPart].use(options[blogPart.toLowerCase() + 's'].use)
+    var partOptions = blog.options[blogPart.toLowerCase() + 's']
+    if (partOptions && partOptions.use)
+      blog[blogPart] = mb[blogPart].use(partOptions.use)
+    else
+      blog[blogPart] = mb[blogPart]
   })
 
   blog.pages       = Collection.of(blog.Page)
