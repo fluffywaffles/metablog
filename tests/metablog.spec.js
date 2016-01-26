@@ -46,10 +46,12 @@ describe('metablog.Blog', function () {
   })
 
   it('Should have its own Page, Post, Resouce, and Collection types', function () {
-    blog.Page
-    blog.Post
-    blog.Resources
-    blog.Collection
+    ;[ 'Page'
+       , 'Post'
+       , 'Resources'
+       , 'Collection' ].forEach(function (item) {
+        expect(metablog[item].isInstance(blog[item])).toBe(true)
+      })
   })
 
 })

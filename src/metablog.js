@@ -7,7 +7,7 @@ var noop = function () { }
 var mimetypeTest = /[A-z*]+\/[A-z*]+/.test
 
 function validMetadata (md) {
-  return (typeof md.title === 'string')
+  return (md && typeof md.title === 'string')
           ? util.extend2({}, md)
           : console.warn('Bad metadata:title') && { title: null }
 }
@@ -48,16 +48,18 @@ Collection.of = function (c) {
 }
 
 var Page = mb.Page = Base.define(function (page, options) {
-  page.metadata = validMetadata(options.metadata)
-  page.uri      = validUri(options.uri)
-  page          = util.extend2(options, page)
+  page.options  = util.extend2({}, options)
+  page.metadata = validMetadata(page.options.metadata)
+  page.uri      = validUri(page.options.uri)
+  page          = util.extend2(page.options, page)
 })
 
 var Post = mb.Post = Page.use(postStatus)
 
 var Resource = mb.Resource = Base.define(function (res, options) {
+  res.options = util.extend2({}, options)
   res.type = mimetypeTest
-  res.uri  = uri(options.uri)
+  res.uri  = uri(res.options.uri)
 })
 
 var Blog = mb.Blog = Base.define(function Blog (blog, options) {
