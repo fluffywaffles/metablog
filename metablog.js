@@ -39,6 +39,15 @@ async function template (str, vars, root = '.') {
     s = s.replace(m[0], toput)
   }
 
+  const linkre = /#{link\(([^)}]+)\)(.+)}/g
+  str = s, s = str.slice()
+  while (m = linkre.exec(str)) {
+    console.log(`LINK Found: ${m[0]}`)
+    let link = `<a href="./${m[1]}">${m[2].trim()}</a>`
+    console.log(`Writing: ${link}`)
+    s = s.replace(m[0], link)
+  }
+
   const templatere = /#{([^}]+)}/g
   str = s, s = str.slice()
   while (m = templatere.exec(str)) {

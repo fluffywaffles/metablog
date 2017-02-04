@@ -1,1 +1,3 @@
 Hey, there. I'm some content -- well, sort of.
+
+#{link(page2) Go to page2.}
