@@ -64,7 +64,7 @@ function Blog (
   async function compile () {
     mkdirp(outdir)
 
-    let tpl = await read('template/main')
+    let tpl = await read('template/entry')
 
     for (let name of this.pages) {
       let { content } = await Page(name)
