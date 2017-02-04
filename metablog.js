@@ -1,5 +1,6 @@
 var fs = require('fs')
 
+// TODO(jordan): This template code is grody.
 async function template (str, vars, root = '.') {
   let m
 
