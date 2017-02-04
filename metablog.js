@@ -42,8 +42,22 @@ async function template (str, vars, root = '.') {
   str = s, s = str.slice()
   while (m = templatere.exec(str)) {
     console.log(`PLAIN Found: ${m[0]}`)
-    console.log(`Writing: ${vars[m[1]]}`)
-    s = s.replace(m[0], vars[m[1]])
+    let toput = vars[m[1]]
+    // FIXME(jordan): This code is grody.
+    let lastNewline = str.substr(0, m.index).lastIndexOf('\n')
+    console.log(str.substr(lastNewline + 1, m.index - lastNewline - 1))
+    if (lastNewline != -1) {
+      let leadingSpaces = str.substr(lastNewline + 1, m.index - lastNewline - 1).match(/^([ ]+)/)
+      if (leadingSpaces) {
+        leadingSpaces = leadingSpaces[0]
+        console.log(`HAS LEADING SPACES: ${leadingSpaces.length}`)
+        if (~toput.indexOf('\n')) {
+          toput = toput.split('\n').map(l => l.length ? leadingSpaces + l : l).join('\n')
+        }
+      }
+    }
+    console.log(`Writing: ${toput}`)
+    s = s.replace(m[0], toput)
   }
 
   return s
