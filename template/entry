@@ -1,5 +1,13 @@
-#{include(template/header)}
+<html>
+  <head>
+    #{include(template/meta)}
+  </head>
 
-#{include(template/body)}
+  <body>
+    #{include(template/header)}
 
-#{include(template/footer)}
+    #{include(template/body)}
+
+    #{include(template/footer)}
+  </body>
+</html>

@@ -1,15 +1,41 @@
 var fs = require('fs')
 
 async function template (str, vars, root = '.') {
-  const includere  = /#{include\(([^)]+)\)}/g
+  let m
+
+  const ifre = /^#{if\(([^)}]+)\)(.+)}$/gm
   let s = str.slice()
+  while (m = ifre.exec(str)) {
+    console.log(`IF Found: ${m[0]}`)
+    if (vars[m[1]]) {
+      console.log(`Writing: ${m[2].trim()}`)
+      s = s.replace(m[0], m[2].trim())
+    } else {
+      console.log(`Removing line.`)
+      s = s.slice(0, s.indexOf(m[0]))  + s.slice(s.indexOf(m[0]) + m[0].length + 1)
+    }
+  }
+
+  const includere  = /([ ]+)*#{include\(([^)}]+)\)}/g
+  str = s, s = str.slice()
   while (m = includere.exec(str)) {
-    s = s.replace(m[0], await read(root + '/' + m[1]))
+    console.log(`INCLUDE Found: ${m[0]}`)
+    console.log(`HAS LEADING SPACES: ${m[1].length}`)
+    console.log(`>>> Recur...`)
+    let toput = await template(await read(root + '/' + m[2]), vars, root)
+    console.log(`<<< Recur done!`)
+    console.log(`Preserve leading spaces...`)
+    toput = toput.split('\n').map(l => l.length ? m[1] + l : l).join(`\n`)
+    console.log(`Spaces restored!`)
+    console.log(`INCLUDE DONE. Writing: ${toput}`)
+    s = s.replace(m[0], toput)
   }
 
   const templatere = /#{([^}]+)}/g
   str = s, s = str.slice()
   while (m = templatere.exec(str)) {
+    console.log(`PLAIN Found: ${m[0]}`)
+    console.log(`Writing: ${vars[m[1]]}`)
     s = s.replace(m[0], vars[m[1]])
   }
 
@@ -70,7 +96,7 @@ function Blog (
 
     for (let name of this.pages) {
       let { content } = await Page(name)
-      let out = await template(tpl, { content })
+      let out = await template(tpl, { content, referer: 'me!', title: name, description: 'blah' })
       console.log(out)
       await write(outdir + '/' + name, out)
     }
