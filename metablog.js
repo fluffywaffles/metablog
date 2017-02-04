@@ -6,11 +6,13 @@ async function template (str, vars, root = '.') {
   while (m = includere.exec(str)) {
     s = s.replace(m[0], await read(root + '/' + m[1]))
   }
+
   const templatere = /#{([^}]+)}/g
   str = s, s = str.slice()
   while (m = templatere.exec(str)) {
     s = s.replace(m[0], vars[m[1]])
   }
+
   return s
 }
 
@@ -86,12 +88,9 @@ function Blog (
 
 /////////////// ///////////// ///////////// ///////////// ///////////// ///////////// /////////////
 
-header = fs.readFileSync('template/header').toString()
-body   = fs.readFileSync('template/body').toString()
-footer = fs.readFileSync('template/footer').toString()
-
 let blog = Blog(
   ...fs.readdirSync(pagedir)
 )
 
 blog.compile()
+
