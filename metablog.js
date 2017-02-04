@@ -84,15 +84,6 @@ function write (f, data) {
 const pagedir = 'page'
 const outdir   = 'dist'
 
-async function Page (
-  name
-) {
-  return {
-    name,
-    content: await read(pagedir + '/' + name)
-  }
-}
-
 function Blog (
   ...pages
 ) {
@@ -102,7 +93,7 @@ function Blog (
     let tpl = await read('template/entry')
 
     for (let name of this.pages) {
-      let { content } = await Page(name)
+      let content = await read(pagedir + '/' + name)
       console.log(
         `\n=== Templater invoked... Debug! ===================================================\n`
       )
