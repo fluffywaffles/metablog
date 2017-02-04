@@ -3,7 +3,7 @@ var fs = require('fs')
 async function template (str, vars, root = '.') {
   let m
 
-  const ifre = /^#{if\(([^)}]+)\)(.+)}$/gm
+  const ifre = /#{if\(([^)}]+)\)(.+)}/g
   let s = str.slice()
   while (m = ifre.exec(str)) {
     console.log(`IF Found: ${m[0]}`)
