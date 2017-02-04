@@ -82,7 +82,7 @@ function write (f, data) {
 /////////////// ///////////// ///////////// ///////////// ///////////// ///////////// /////////////
 
 const pagedir = 'page'
-const outdir   = 'dist'
+const outdir  = 'dist'
 
 function Blog (
   ...pages
