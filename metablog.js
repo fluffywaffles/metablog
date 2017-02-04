@@ -53,7 +53,7 @@ async function template (str, vars, root = '.') {
         leadingSpaces = leadingSpaces[0]
         console.log(`HAS LEADING SPACES: ${leadingSpaces.length}`)
         if (~toput.indexOf('\n')) {
-          toput = toput.split('\n').map(l => l.length ? leadingSpaces + l : l).join('\n')
+          toput = toput.split('\n').map(l => l.length ? leadingSpaces + l : l).join('\n').trim()
         }
       }
     }
