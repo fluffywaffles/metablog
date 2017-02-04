@@ -44,7 +44,7 @@ function write (f, data) {
   })
 }
 
-const pagedir = 'pages'
+const pagedir = 'page'
 const outdir   = 'dist'
 
 async function Page (
