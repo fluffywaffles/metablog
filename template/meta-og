@@ -1,0 +1,6 @@
+#{if(og:site_name)   <meta property="og:site_name"   content="#{og:site_name}">  }
+#{if(og:type)        <meta property="og:type"        content="#{og:type}">       }
+#{if(og:title)       <meta property="og:title"       content="#{og:title}">      }
+#{if(og:description) <meta property="og:description" content="#{og:description}">}
+#{if(og:url)         <meta property="og:url"         content="#{og:url}">        }
+#{if(og:image)       <meta property="og:image"       content="#{og:image}">      }

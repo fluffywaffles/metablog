@@ -5,7 +5,9 @@
 
 <meta name="description" content="#{description}">
 #{if(referer) <meta name="referer" content="#{referer}">}
+
 #{if(og)      include(template/meta-og)                 }
+
 #{if(twitter) include(template/meta-twitter)            }
 
 <meta name="generator" content="derpenheimer blog generator version ~0">

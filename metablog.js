@@ -8,11 +8,16 @@ async function template (str, vars, root = '.') {
   while (m = ifre.exec(str)) {
     console.log(`IF Found: ${m[0]}`)
     if (vars[m[1]]) {
-      console.log(`Writing: ${m[2].trim()}`)
-      s = s.replace(m[0], m[2].trim())
+      let toput = m[2]
+      if (/include\([^)]+\)/g.test(toput)) {
+        toput = '#{' + toput.trim() + '}'
+      }
+      console.log(`Writing: ${toput.trim()}`)
+      s = s.replace(m[0], toput.trim())
     } else {
-      console.log(`Removing line.`)
-      s = s.slice(0, s.indexOf(m[0]))  + s.slice(s.indexOf(m[0]) + m[0].length + 1)
+      // FIXME(jordan): Detect if there are newlines to coalesce.
+      console.log(`Removing line, !! assuming newlines on either side! !!`)
+      s = s.slice(0, s.indexOf(m[0]) - 1) + s.slice(s.indexOf(m[0]) + m[0].length + 1)
     }
   }
 
@@ -20,12 +25,14 @@ async function template (str, vars, root = '.') {
   str = s, s = str.slice()
   while (m = includere.exec(str)) {
     console.log(`INCLUDE Found: ${m[0]}`)
-    console.log(`HAS LEADING SPACES: ${m[1].length}`)
+    if (m[1]) console.log(`HAS LEADING SPACES: ${m[1].length}`)
     console.log(`>>> Recur...`)
     let toput = await template(await read(root + '/' + m[2]), vars, root)
     console.log(`<<< Recur done!`)
-    console.log(`Preserve leading spaces...`)
-    toput = toput.split('\n').map(l => l.length ? m[1] + l : l).join(`\n`)
+    if (m[1]) {
+      console.log(`Preserve leading spaces...`)
+      toput = toput.split('\n').map(l => l.length ? m[1] + l : l).join(`\n`)
+    }
     console.log(`Spaces restored!`)
     console.log(`INCLUDE DONE.`)
     s = s.replace(m[0], toput)
@@ -99,7 +106,25 @@ function Blog (
       console.log(
         `\n=== Templater invoked... Debug! ===================================================\n`
       )
-      let out = await template(tpl, { content, referer: 'me!', title: name, description: 'blah' })
+      let out = await template(tpl, {
+        content,
+        referer: 'me!',
+        title: name,
+        description: 'blah',
+        og: false,
+        'og:site_name': 'me.com',
+        'og:type': 'website?',
+        'og:title': 'i am me',
+        'og:description': 'all about me',
+        'og:url': 'localhost',
+        'og:image': 'me.png',
+        twitter: false,
+        'twitter:card': 'summary_large_image',
+        'twitter:title': 'i am me',
+        'twitter:description': 'still all about me',
+        'twitter:url': 'localhost',
+        'twitter:image:src': 'me.png',
+      })
       console.log(
         `\n=== Templater done. ===============================================================\n`
       )

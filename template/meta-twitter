@@ -1,0 +1,5 @@
+#{if(twitter:card)        <meta name="twitter:card"        content="#{twitter:card}">       }
+#{if(twitter:title)       <meta name="twitter:title"       content="#{twitter:title}">      }
+#{if(twitter:description) <meta name="twitter:description" content="#{twitter:description}">}
+#{if(twitter:url)         <meta name="twitter:url"         content="#{twitter:url}">        }
+#{if(twitter:image:src)   <meta name="twitter:image:src"   content="#{twitter:image:src}">  }
