@@ -43,7 +43,7 @@ async function template (str, vars, root = '.') {
   str = s, s = str.slice()
   while (m = linkre.exec(str)) {
     console.log(`LINK Found: ${m[0]}`)
-    let link = `<a href="./${m[1]}">${m[2].trim()}</a>`
+    let link = `<a href="./${m[1]}.html">${m[2].trim()}</a>`
     console.log(`Writing: ${link}`)
     s = s.replace(m[0], link)
   }
@@ -144,7 +144,7 @@ function Blog (
         `\n=== Templater done. ===============================================================\n`
       )
       console.log(out)
-      await write(outdir + '/' + name, out)
+      await write(outdir + '/' + name + '.html', out)
     }
   }
 
