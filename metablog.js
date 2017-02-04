@@ -99,7 +99,7 @@ function Blog (
       )
       let out = await template(tpl, {
         content,
-        referer: 'me!',
+        referrer: 'me!',
         title: name,
         description: 'blah',
         og: true,
