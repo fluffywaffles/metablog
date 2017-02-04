@@ -27,7 +27,7 @@ async function template (str, vars, root = '.') {
     console.log(`Preserve leading spaces...`)
     toput = toput.split('\n').map(l => l.length ? m[1] + l : l).join(`\n`)
     console.log(`Spaces restored!`)
-    console.log(`INCLUDE DONE. Writing: ${toput}`)
+    console.log(`INCLUDE DONE.`)
     s = s.replace(m[0], toput)
   }
 
@@ -96,7 +96,13 @@ function Blog (
 
     for (let name of this.pages) {
       let { content } = await Page(name)
+      console.log(
+        `\n=== Templater invoked... Debug! ===================================================\n`
+      )
       let out = await template(tpl, { content, referer: 'me!', title: name, description: 'blah' })
+      console.log(
+        `\n=== Templater done. ===============================================================\n`
+      )
       console.log(out)
       await write(outdir + '/' + name, out)
     }
