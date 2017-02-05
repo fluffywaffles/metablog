@@ -8,7 +8,7 @@ module.exports.bindall = function bindall (o) {
   }
 }
 
-module.exports.mkdirp = function mkdirp (d) {
+module.exports.mkdir = function mkdir (d) {
   if (!fs.existsSync(d)) fs.mkdirSync(d)
 }
 

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const template = require('./templater')
-const { bindall, read, write, mkdirp } = require('./util')
+const { bindall, read, write, mkdir } = require('./util')
 
 /////////////// ///////////// ///////////// ///////////// ///////////// ///////////// /////////////
 
@@ -11,7 +11,7 @@ function Blog (
   ...pages
 ) {
   async function compile () {
-    mkdirp(outdir)
+    mkdir(outdir)
 
     let tpl = await read('template/entry')
 
