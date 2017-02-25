@@ -9,7 +9,7 @@ async function compile (outdir = 'dist') {
 
   for (let name of this.pages) {
     let content = await read(name)
-    console.log(
+    if (this.config.DEBUG) console.log(
       `\n=== Templater invoked... Debug! ===================================================\n`
     )
     let out = await template(tpl, {
@@ -31,10 +31,10 @@ async function compile (outdir = 'dist') {
       'twitter:url': 'localhost',
       'twitter:image:src': 'me.png',
     })
-    console.log(
+    if (this.config.DEBUG) console.log(
       `\n=== Templater done. ===============================================================\n`
     )
-    console.log(out)
+    if (this.config.DEBUG) console.log(out)
     await write(outdir + '/' + path.basename(name) + '.html', out)
   }
 }

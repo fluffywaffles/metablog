@@ -45,6 +45,7 @@
  * =================================================================================================
  */
 const { read } = require('./util')
+const log = require('./log')
 
 module.exports = async function template (str, vars, root = '.') {
   let m
@@ -52,17 +53,17 @@ module.exports = async function template (str, vars, root = '.') {
   const ifre = /#{if\(([^)}]+)\)(.+)}/g
   let s = str.slice()
   while (m = ifre.exec(str)) {
-    console.log(`IF Found: ${m[0]}`)
+    log.debug(`IF Found: ${m[0]}`)
     if (vars[m[1]]) {
       let toput = m[2]
       if (/include\([^)]+\)/g.test(toput)) {
         toput = '#{' + toput.trim() + '}'
       }
-      console.log(`Writing: ${toput.trim()}`)
+      log.debug(`Writing: ${toput.trim()}`)
       s = s.replace(m[0], toput.trim())
     } else {
       // FIXME(jordan): Detect if there are newlines to coalesce.
-      console.log(`Removing line, !! assuming newlines on either side! !!`)
+      log.debug(`Removing line, !! assuming newlines on either side! !!`)
       s = s.slice(0, s.indexOf(m[0]) - 1) + s.slice(s.indexOf(m[0]) + m[0].length + 1)
     }
   }
@@ -70,48 +71,48 @@ module.exports = async function template (str, vars, root = '.') {
   const includere  = /([ ]+)*#{include\(([^)}]+)\)}/g
   str = s, s = str.slice()
   while (m = includere.exec(str)) {
-    console.log(`INCLUDE Found: ${m[0]}`)
-    if (m[1]) console.log(`HAS LEADING SPACES: ${m[1].length}`)
-    console.log(`>>> Recur...`)
+    log.debug(`INCLUDE Found: ${m[0]}`)
+    if (m[1]) log.debug(`HAS LEADING SPACES: ${m[1].length}`)
+    log.debug(`>>> Recur...`)
     let toput = await template(await read(root + '/' + m[2]), vars, root)
-    console.log(`<<< Recur done!`)
+    log.debug(`<<< Recur done!`)
     if (m[1]) {
-      console.log(`Preserve leading spaces...`)
+      log.debug(`Preserve leading spaces...`)
       toput = toput.split('\n').map(l => l.length ? m[1] + l : l).join(`\n`)
     }
-    console.log(`Spaces restored!`)
-    console.log(`INCLUDE DONE.`)
+    log.debug(`Spaces restored!`)
+    log.debug(`INCLUDE DONE.`)
     s = s.replace(m[0], toput)
   }
 
   const linkre = /#{link\(([^)}]+)\)(.+)}/g
   str = s, s = str.slice()
   while (m = linkre.exec(str)) {
-    console.log(`LINK Found: ${m[0]}`)
+    log.debug(`LINK Found: ${m[0]}`)
     let link = `<a href="./${m[1]}.html">${m[2].trim()}</a>`
-    console.log(`Writing: ${link}`)
+    log.debug(`Writing: ${link}`)
     s = s.replace(m[0], link)
   }
 
   const templatere = /#{([^}]+)}/g
   str = s, s = str.slice()
   while (m = templatere.exec(str)) {
-    console.log(`PLAIN Found: ${m[0]}`)
+    log.debug(`PLAIN Found: ${m[0]}`)
     let toput = vars[m[1]]
     // FIXME(jordan): This code is grody.
     let lastNewline = str.substr(0, m.index).lastIndexOf('\n')
-    console.log(str.substr(lastNewline + 1, m.index - lastNewline - 1))
+    log.debug(str.substr(lastNewline + 1, m.index - lastNewline - 1))
     if (lastNewline != -1) {
       let leadingSpaces = str.substr(lastNewline + 1, m.index - lastNewline - 1).match(/^([ ]+)/)
       if (leadingSpaces) {
         leadingSpaces = leadingSpaces[0]
-        console.log(`HAS LEADING SPACES: ${leadingSpaces.length}`)
+        log.debug(`HAS LEADING SPACES: ${leadingSpaces.length}`)
         if (~toput.indexOf('\n')) {
           toput = toput.split('\n').map(l => l.length ? leadingSpaces + l : l).join('\n').trim()
         }
       }
     }
-    console.log(`Writing: ${toput}`)
+    log.debug(`Writing: ${toput}`)
     s = s.replace(m[0], toput)
   }
 
