@@ -16,6 +16,8 @@ async function compile (outdir = 'dist') {
       content,
       referrer: 'origin-when-cross-origin',
       title: name,
+      header: 'hello',
+      subheader: 'there',
       description: 'blah',
       og: true,
       'og:site_name': 'me.com',
